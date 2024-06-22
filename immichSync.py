@@ -22,12 +22,16 @@ def httpGetJson(url, key):
                     headers = {'x-api-key': key}
                 )
         code = 200
-    except httpx.ReadError.request as e:
-        if not hasattr(e, "code"):
-            print(e)
-            code = -1
-        else:
-            code = e.coderint
+    except httpx.HTTPError as exc:
+        print(f"HTTP Exception for {exc.request.url} - {exc}")
+
+   
+    # except httpx.ReadError.request as e:
+    #     if not hasattr(e, "code"):
+    #         print(e)
+    #         code = -1
+    #     else:
+    #         code = e.coderint
 
     return resp.json()
     
@@ -44,12 +48,16 @@ def httpGetFile(url, key, path):
                     headers = {'x-api-key': key}
                 )
         code = 200
-    except httpx.ReadError.request as e:
-        if not hasattr(e, "code"):
-            print(e)
-            code = -1
-        else:
-            code = e.coderint
+    except httpx.HTTPError as exc:
+        print(f"HTTP Exception for {exc.request.url} - {exc}")
+
+    
+    # except httpx.ReadError.request as e:
+    #     if not hasattr(e, "code"):
+    #         print(e)
+    #         code = -1
+    #     else:
+    #         code = e.coderint
     
 
     with open(path, 'wb') as f:
@@ -110,10 +118,10 @@ def getAlbumInfo(id, serviceData):
 #     #     return False
     
 def printAlbums(albums):
-    print("index   id                                      Name")
+    print("index   Name")
     index = 0
     for album in albums:
-        print(f'{index}\t{album["id"]}\t{album["albumName"]}')
+        print(f'{index}\t{album["albumName"]}')
         index+=1
 
 ## create and empty file if it does not exist
@@ -188,14 +196,17 @@ def downloadAssetFromImmich(resourceUrl, fileName, serviceData):
                     headers = {'x-api-key': key}
                 )
         code = 200
+    except httpx.HTTPError as exc:
+        print(f"HTTP Exception for {exc.request.url} - {exc}")
 
-    except httpx.ReadError.request as e:
-        if not hasattr(e, "code"):
-            print(e)
-            code = -1
-        else:
-            code = e.coderint
+    # except httpx.ReadError.request as e:
+    #     if not hasattr(e, "code"):
+    #         print(e)
+    #         code = -1
+    #     else:
+    #         code = e.coderint
         return None
+    
     print("complete")
 
    
@@ -269,7 +280,7 @@ def syncToWordPress(state, serviceData):
                 # else:
                 #     updateWordpressAssetMeta(album[assetId], serviceData):
             else: 
-                print(f'{assetId} has already been uploaded, Syncing Metadata only. (Just kidding, this isn\'t implemented yet!)')
+                print(f'{albumName} - ...{assetId[-5:]} has already been uploaded, Syncing Metadata only. (Just kidding, this isn\'t implemented yet!)')
 
 
 
